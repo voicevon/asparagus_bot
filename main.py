@@ -23,7 +23,8 @@ pipeline = rs.pipeline()
 
 config = rs.config()
 
-config.enable_stream(rs.stream.color, 1280, 720, rs.format.bgr8, 30)
+# config.enable_stream(rs.stream.color, 1280, 720, rs.format.bgr8, 30)
+config.enable_stream(rs.stream.color, 1280, 720, rs.format.rgb8, 30)
 
 config.enable_stream(rs.stream.depth, 1280, 720, rs.format.z16, 30)
 
@@ -31,7 +32,7 @@ config.enable_stream(rs.stream.depth, 1280, 720, rs.format.z16, 30)
 
 pipeline.start()  
 
-def captureandsave_images():
+def captureandsave_images( do_save ):
 
     global frame_count
 
@@ -54,7 +55,7 @@ def captureandsave_images():
     # 将图像帧转换为 numpy 数组
 
     color_image = np.asanyarray(colorframe.get_data())
-
+    color_image = cv2.cvtColor(color_image,  cv2.COLOR_BGR2RGB)
     depth_image = np.asanyarray(depthframe.get_data())
 
     # 显示彩色图像
@@ -67,33 +68,37 @@ def captureandsave_images():
 
     cv2.imshow('Depth Image', depth_colormap)
 
-    # 保存彩色图像
+    if do_save:
+        # 保存彩色图像
 
-    cv2.imwrite(os.path.join(save_folder, f"color{frame_count}.jpg"), color_image)
+        cv2.imwrite(os.path.join(save_folder, f"color{frame_count}.jpg"), color_image)
 
-    # 保存深度图像
+        # 保存深度图像
+        # cv2.imwrite(os.path.join(save_folder, f"depth{frame_count}.png"), depth_colormap)
+        cv2.imwrite(os.path.join(save_folder, f"depth{frame_count}.png"), depth_image.astype(np.uint16))
 
-    cv2.imwrite(os.path.join(save_folder, f"depth{frame_count}.jpg"), depth_colormap)
-
-    frame_count += 1
+        frame_count += 1
+        print("file saved  index= ", frame_count )
 
 try:
 
     frame_count = 0
 
     continue_capture = True
-
+    do_save = False
     while True:
 
-        captureandsave_images()
-
-        key = cv2.waitKey(3000)
+        captureandsave_images(do_save)
+        do_save = False
+        key = cv2.waitKey(20)
 
         if key & 0xFF == ord('q'):
             break
 
-        elif key & 0xFF == ord('c'):
-            continue_capture = not continue_capture
+        # elif key & 0xFF == ord('c'):
+        elif key & 0xFF == ord(' '):
+            continue_capture = True
+            do_save = True
 
         if not continue_capture:
             break
