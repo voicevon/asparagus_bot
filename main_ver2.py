@@ -32,14 +32,6 @@ def capture_and_save_images(do_save):
     if not color_frame or not depth_frame:
         return
 
-    # 打印实际的分辨率
-    # color_width = color_frame.get_width()
-    # color_height = color_frame.get_height()
-    # depth_width = depth_frame.get_width()
-    # depth_height = depth_frame.get_height()
-    # print(f"Color Frame Resolution: {color_width}x{color_height}")
-    # print(f"Depth Frame Resolution: {depth_width}x{depth_height}")
-
     # 将图像帧转换为 numpy 数组
     color_image = np.asanyarray(color_frame.get_data())
     color_image = cv2.cvtColor(color_image, cv2.COLOR_BGR2RGB)
@@ -47,7 +39,8 @@ def capture_and_save_images(do_save):
 
     # 显示彩色图像和深度图像
     cv2.imshow('Color Image', color_image)
-    depth_colormap = cv2.applyColorMap(cv2.convertScaleAbs(depth_image, alpha=0.03), cv2.COLORMAP_JET)
+    # 将深度图的最大值设置为1米（1000毫米）
+    depth_colormap = cv2.applyColorMap(cv2.convertScaleAbs(depth_image, alpha=255.0/1000.0), cv2.COLORMAP_JET)
     cv2.imshow('Depth Image', depth_colormap)
 
     if do_save:
