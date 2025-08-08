@@ -59,10 +59,9 @@ last_clk_state = None
 if RUN_ENV == "raspberry":
     last_clk_state = GPIO.input(ENCODER_CLK)  # 需要确保GPIO已初始化
 
-# 应该调整到GPIO初始化之后
 
-# 修改摄像头为全局对象
-cap = cv2.VideoCapture(0) if RUN_ENV == "windows" else None
+
+cap = cv2.VideoCapture(0)  
 
 def capture_frame():
     """从摄像头捕获一帧图像"""

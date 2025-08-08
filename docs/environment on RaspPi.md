@@ -17,18 +17,31 @@ python
 sudo apt install git -y
 git clone https://github.com/voicevon/asparagus_bot.git
 
+sudo apt intall pyhon3-pahoo-mqtt
 
+
+cd asparagus_bot/sorter
+sudo python capture.py
+
+
+
+<!-- sudo apt install python3-full python3-pip python3-venv -y -->
+
+
+-------  or  ---------
+
+<!-- 
 cd asparagus_bot
-sudo apt install python3-full -y
-sudo apt install python3-pip -y
-sudo apt install python3-venv -y
 python3 -m venv asp8
 source asp8/bin/activate
-pip install -r requirements.txt
+
+pip install paho-mqtt
+
+#pip install -r requirements.txt
 
 
 // 查看已安装的包
-pip list
+pip list -->
 
 
 
